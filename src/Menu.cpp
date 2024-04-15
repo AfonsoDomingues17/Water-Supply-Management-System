@@ -269,7 +269,6 @@ void Menu::Balancing_func(Graph<std::string> g) {
     unordered_map<Edge<string>*,double> restore_weights;
 
     while(delta >= 1) {
-
         for(auto v : g.getVertexSet()){
             for(auto e : v->getAdj()){
                 if(e->getWeight() < delta){
@@ -288,7 +287,6 @@ void Menu::Balancing_func(Graph<std::string> g) {
         }
 
         delta /= 2;
-
     }
 
 
@@ -490,7 +488,8 @@ bool Menu::Remove_Water_Reservoir(std::string reservoir_code,Graph<string> s) {
     cout << "The affected cities by the removal of the Reservoi are:\n";
     for(auto p : r){
         if(p.second < p.first.getDemand()) {
-            if ((cities_affected.find(p.first.getCodeCity()) == cities_affected.end()) || (temp[p.first.getCodeCity()] > p.second)) cout << p.first.getNameCity() << ' ' << (p.first.getDemand() - p.second) << " m^3 of water in deficit!" << '\n';
+            if ((cities_affected.find(p.first.getCodeCity()) == cities_affected.end()) || (temp[p.first.getCodeCity()] > p.second))
+                cout << p.first.getNameCity() << ' ' << (p.first.getDemand() - p.second) << " m^3 of water in deficit!" << '\n';
         }
     }
     return true;
@@ -624,7 +623,7 @@ void Menu::restore_capacities(Graph<string> d,unordered_map<Edge<string>*,double
 }
 
 /**
- * function that removes a multiple pipes from the system and verifies which cities have their supply affected - complexity O(VE^2 + f(n)), where V is the number of vertices, E is the number of edges in the graph s and f(n) the time complexity of the Meet_Costumer_needs() function
+ * function that removes a multiple pipes from the system and verifies which cities have their supply affected - complexity O(N(VE^2) + f(n)), where V is the number of vertices, E is the number of edges in the graph s,f(n) the time complexity of the Meet_Costumer_needs() function and N is the number of pipes to remove
  * @param s graph that contain all the information about the water supply management system
  * @param t set that contains the multiple pipes to remove, each pair represents the source and target vertexes of each pipe
  * @return true if all the given pipes exist and it outputs directly to the console the cities whose supply is affected by this removal and false otherwise
@@ -657,12 +656,9 @@ bool Menu::Remove_Pipe2(Graph<string> s,set<pair<string,string>> t) {
                 break;
             }
         }
-
-
         if (!exits) return false;
         //Check for already existent problems with supply
         //Check for invalid source or target
-
         if (bidirectional) {
             for (auto e: v_source->getAdj()) {
                 if (e->getDest()->getInfo() == final.second) {
@@ -678,7 +674,6 @@ bool Menu::Remove_Pipe2(Graph<string> s,set<pair<string,string>> t) {
                     break;
                 }
             }
-
         } else {
             for (auto e: v_source->getAdj()) {
                 if (e->getDest()->getInfo() == final.second) {
@@ -710,7 +705,8 @@ bool Menu::Remove_Pipe2(Graph<string> s,set<pair<string,string>> t) {
     cout << "The affected cities by the removal of the Pipe are:\n";
     for(auto p : r){
         if(p.second < p.first.getDemand()) {
-            if ((cities_affected.find(p.first.getCodeCity()) == cities_affected.end()) || (temp[p.first.getCodeCity()] > p.second)) cout << p.first.getNameCity() << ' ' << (p.first.getDemand() - p.second) << " m^3 of water in deficit!" << '\n';
+            if ((cities_affected.find(p.first.getCodeCity()) == cities_affected.end()) || (temp[p.first.getCodeCity()] > p.second))
+                cout << p.first.getNameCity() << ' ' << (p.first.getDemand() - p.second) << " m^3 of water in deficit!" << '\n';
         }
     }
     return true;
@@ -895,7 +891,11 @@ void Menu::Critical_Pipe_allCities(Graph<std::string> s) {
             }
         }
     }
-
+    for(auto v : s.getVertexSet()){
+        for(auto e : v->getAdj()){
+            e->setSelected(false);
+        }
+    }
     cout << "The critical pipes for each city are: " << endl;
     for (auto it : all_cities) {
         cout << it.first << ":" << endl;
@@ -970,7 +970,11 @@ bool Menu::Critical_Pipe_City(Graph<string> s,string city_code){
             }
         }
     }
-
+    for(auto v : s.getVertexSet()){
+        for(auto e : v->getAdj()){
+            e->setSelected(false);
+        }
+    }
     cout << "The critical pipes for " << d.getCities()[city_code].getNameCity() <<" are: " << endl;
     for (auto it : all_cities) {
         cout << it << endl;
